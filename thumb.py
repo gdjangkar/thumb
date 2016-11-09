@@ -44,6 +44,8 @@ def save_file(events):
 	
 	# Extract description and dates from current event list
 
+	i = 0
+
 	for i in range (0, len(events)):
 		tmp = ""
 		for j in range (0, 2):
@@ -63,6 +65,8 @@ def save_file(events):
 	# Add into comma-separated lines on file pointer
 	
 	f.close()
+	
+	print ("File saved successfully")
 
 def command_n(events):
 	tmpDesc = input("Enter event description > ")
@@ -80,13 +84,44 @@ def command_n(events):
 	return events
 
 def command_p(events):
-	events = sorted(events, key=lambda tup: tup[1])
 	
-	for event in events:
+	if (len(events) > 2):
+		events = sorted(events, key=lambda tup: tup[1])
+	
+		for event in events:	
+			print ("You have " + event[0], end=" ")
+			print ("on " + str(event[1].day) + "/" + str(event[1].month) + "/" + str(event[1].year))
+	else:	
+		print ("You have " + events[0], end=" ")
+		print ("on " + str(events[1].day) + "/" + str(events[1].month) + "/" + str(events[1].year))
 		
-		print ("You have " + event[0], end=" ")
-		print ("on " + str(event[1].day) + "/" + str(event[1].month) + "/" + str(event[1].year))
+	return events
+
+def command_d(events):
+	
+	i = 0
+	
+	for i in range (0, len(events)):
+		print (str(i+1) + " :", end=" ")
+		print (events[i][0] + ", " + str(events[i][1]))
+	
+	delIndex = int(input("Enter event to delete > ")) - 1
+	
+	events.pop(delIndex)
+	
+	return events
+
+def command_s(events):
+	
+	searchWord = input("Enter string to search > ")
+	
+	for i in range (0, len(events)):
+		s1 = str(events[i][0]).find(searchWord)
+		s2 = str(events[i][1]).find(searchWord)
 		
+		if ((s1 != -1) or (s2 != -1)):
+			command_p(events[i])
+	
 	return events
 
 if __name__ == "__main__":
@@ -106,3 +141,7 @@ if __name__ == "__main__":
 			myEvents = command_n(myEvents)		
 		elif (command == "p"):
 			myEvents = command_p(myEvents)
+		elif (command == "d"):
+			myEvents = command_d(myEvents)
+		elif (command == "s"):
+			myEvents = command_s(myEvents)
